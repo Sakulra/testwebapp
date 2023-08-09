@@ -1,0 +1,20 @@
+{% extends 'base.html'%}
+{% block body %}
+
+<h2>history</h2>
+<table>
+    <tr>
+        {% for rowtitle in therowtitles %}
+            <th>{{rowtitle}}</th>
+        {% endfor %}
+    </tr>
+    {% for logrow in thedata %}
+        <tr>
+            {%for item in logrow%}
+                <td>{{item}}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+{%endblock%}

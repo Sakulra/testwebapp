@@ -1,17 +1,28 @@
-{% extends 'base.html' %}
-
+{% extends 'base.html'%}
 {% block body %}
+<h2>Welcome to search4letters on the web</h2>
+<form method="post" action="/search4">  <!--通过这个post提交跳转到main.py的/search4路径，即他访问了这个路径-->
+    <table>
+        <p>Use this form to submit a search request</p>
+        <tr>
+            <td>phrase:</td>
+            <td><input name="phrase" type="text" width="60"></td>
+        </tr>
+        <tr>
+            <td>letters:</td>
+            <td><input name="letters" type="text" value="aeiou"></td>
+        </tr>
+    </table>
+    <p>When you're ready, click this button:</p>
+    <input value="Do it!" type="submit">
+    <input value="Clear All" type="reset">
 
-<h2>{{ the_title }}</h2>
-
-<form method='POST' action='/search4'>
-<table>
-<p>Use this form to submit a search request:</p>
-<tr><td>Phrase:</td><td><input name='phrase' type='TEXT' width='60'></td></tr>
-<tr><td>Letters:</td><td><input name='letters' type='TEXT' value='aeiou'></td></tr>
-</table>
-<p>When you're ready, click this button:</p>
-<p><input value='Do it!' type='SUBMIT'></p>
 </form>
+{%endblock%}
 
-{% endblock %}
+<!--建立表格还可以如下,虽然不美观但是也能完成功能-->
+<!-- <form method="post" action="/search4">
+    <p>Use this form to submit a search request</p>
+    phrase:<input type="text" name="phrase" width="60">
+    letters:<input type="text" name="letters">
+</form> -->

@@ -1,12 +1,16 @@
-<!doctype html>
-<html>
-    <head>
-        <title>{{ the_title }}</title>
-        <link rel="stylesheet" href="static/hf.css" />
-    </head>
-    <body>
-        {% block body %}
-
-        {% endblock %}
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search4letteers</title>
+    <link rel="stylesheet" href="../static/hf.css">  <!--为了加载外部css文件，和加载js文件稍有不同-->
+</head>
+<body>
+    <script src="../static/sakura.js"></script>
+    {% block body %}   <!--block body之间的空格不能丢，丢了就报错-->
+    {% endblock %}
+    
+</body>
 </html>
