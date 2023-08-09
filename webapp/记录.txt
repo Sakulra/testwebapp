@@ -1,0 +1,399 @@
+0.在python中在对变量赋值之前不能使用这个变量。
+  1.dir(模块名) 查看模块包含的所有函数。
+  2.help(模块名.函数名) 查看函数具体用法。
+  3.python内置了一个object类，其中定义了一些标准行为，也即类的方法，所有其他的类都继承了object这个类，可以调用object
+    类中的所有方法，但这个object类中的方法可以被自己写的方法覆盖。这个object类非常有用！！！
+  4.对函数参数提供默认值：def func(a: int=0,b: int=1),就设置了a默认0，b默认1。
+  5.函数括号里的既可能是普通参数，或变量，也可能是一个函数，编写函数修饰符时就会出现向函数传递函数作为一个参数，如果引用
+    函数而不加小括号，就会得到函数对象，就可以把他当成参数
+  6.创建函数修饰符时必须使用functools模块的wraps函数对内部函数进行修饰，如果不修饰，那么函数可能会忘记自己。
+  7.raise语句可以主动产生一个执行错误
+  8.对象包括方法和属性，方法有时称为行为，属性成为状态
+  9.HTTP状态码：
+    100～199代表信息消息，这些状态码都没有问题，服务器在提供关于客户端请求的详细信息。
+    200～299，代表成功消息，服务器已经接收、理解和处理客户端请求，一切正常。
+    300～399，代表重定向消息，服务器通知客户端请求可以在别处处理。
+    400～499，代表客户端错误消息，服务器从客户端接收到一个它不理解也无法处理的请求，通常为客户端的问题。
+    500～599，代表服务器错误消息，服务器从客户端接收到一个请求，但是服务器尝试处理这个请求时失败了，为服务器的问题。
+  10.避免主代码代码写死，或者固定必须得用什么数据库，即紧耦合，要尽量将这种与主代码分离开，后来有修改也方便
+
+
+  
+1.Python 的数据类型，例如整型（int）、字符串（string）等等，是不可变的。比如：
+   a=1
+   b=a #此时a,b都指向1这个对象
+   a=a+1
+   可得到输出a=1,b=2
+   所以，a = a + 1，并不是让 a 的值增加 1，而是表示重新创建了一个新的值为 2 的对象，并让 a 指向它。
+   但是 b 仍然不变，仍然指向 1 这个对象。
+   当数据类型是可变的，例如列表，它的情况就不一样了
+   a=[1,2,3]
+   b=a
+   a.append(4)
+   可得到输出a=[1,2,3,4],b=[1,2,3,4]
+2.Python 里的变量可以被删除，但是对象无法被删除。比如下面的代码：
+   arr = [1, 2, 3]
+   del arr
+   del arr 删除了 arr 这个变量，从此以后你无法访问 arr，但是对象[1, 2, 3]仍然存在。Python 程序运行时，
+   其自带的垃圾回收系统会跟踪每个对象的引用。如果[1, 2, 3]除了 arr 外，还在其他地方被引用，那就不会被回收，
+   反之则会被回收。
+3.python的参数传递既不是值传递也不是引用传递，而是在参数传递时新变量与原变量指向同一个对象，如果对象不可变新原
+   变量二者互不影响，如果对象可变二者是一体的。这个对象传递不是指向一个具体的内存地址，而是指向一个具体的对象。
+   记住：python的一切是对象！！！
+   例：def func1(b):
+           b=2
+      def func2(b):
+          b=2
+          return b
+      这两个函数对不可变数据有不同的结果
+      a1=1
+      a2=1
+      func(a1)
+      func(a2)
+      可得到a1=1,a2=2,，因为是对象传递，func1中的b当要赋值时就会创建一个新对象2，对a1没有影响；
+      而func2将新创建的2又赋给了a2，原来a2指向的对象1将会被python看情况回收，a2则指向新的对象2。
+4.在 Python中str(列表)将列表转换为字符串
+我们可以使用 '想用的分隔符'.join() 方法将具有 str 数据类型元素的列表转换为字符串，分隔符可以空也可以是|,！等
+例如，
+A = ["a", "b", "c"]
+StrA = ''.join(A)
+print(StrA)
+## StrA is "abc"
+join 方法连接任意数量的字符串，被调用该方法的字符串被插入每个给定的字符串之间。如示例中所示，
+字符串 "" （一个空字符串）被插入列表元素之间。
+如果要在元素之间添加空格，则应使用
+StrA = ' '.join(A)
+## StrA is "a b c"
+可以使用 要转换的列表.split('分隔符')，就会将使用分隔符分开的前后字符转换成列表的不同对象,字符串的内置方法
+StrA=StrA.split(' ')
+print(StrA)
+##StrA is ['a','b','c']
+
+5.在 Python 中 str 将非列表转换为字符串
+  一是使用列表推导式，二是使用map 函数
+  >>> a = [1,2,3]
+  >>> "".join(map(str, a))
+  '123'
+  map 函数将函数 str 应用于列表 a 中的所有元素，并返回一个可迭代的 map 对象。
+  "".join() 迭代 map 对象中的所有元素，并将连接的元素作为字符串返回。
+  可以用
+
+6.字典调用时查看里面的内容要用[]，列表索引也是[],字典提供大量内置方法其中又items(),它会返回一个键值对列表，
+  里面的元素是元组。如：
+  stu = {
+    'name': '小王',
+    'age': 14,
+    'gender': '男',
+   }
+   print(stu.items())
+  输出结果：
+  dict_items([('name', '小王'), ('age', 14), ('gender', '男')])
+7.嵌套字典采用二维数组定位方法，people[行][列]来唯一确定某一数据
+8.当元组只包含一个对象时，末尾要加个“，”因为元组规定至少要包含一个“，”
+9.{}表示一个空字典而不是一个空集合，空集合用set()来表示
+  []空列表、{}空字典、()空元组、set()空集合
+10.可以为函数参数设置默认值def function(arg1,arg2='123'): 当只传递一个参数时arg2就会默认为‘123‘
+  调用函数时既可以位置赋值function(abc,'def'),也可以关键字赋值function(arg2='def',arg1=abc)
+11.创建模块必须至少包含setup.py和README.txt两个文件，再加上自己要发布的.py文件
+  第一步创建文件
+  setup.py所包含的内容为
+  from setuptools import setup
+    setup(name='vsearch',
+          version='1.0',
+          description='The Head First Python Search Tools',
+          author='ZDB',
+          author_email='yourfather@cust.app',
+          url='yourfather.com'
+          py_modules=['vsearch'],      #包含所有.py文件的列表，如果还有其他的，就接着加,如还有detect.py
+    )                                  #py_modules=['vsearch','detect']
+  README.txt的内容是可选的用来描述包，所以可以什么内容都不写
+  第二步创建发布文件
+    python3 setup.py sdist #sdist是传递的参数,源码包sdist就是我们熟悉的 .zip 、.tar.gz 等后缀文件。
+                           #就是一个压缩包，里面包含了所需要的的所有源码文件以及一些静态文件（txt文本、css等）
+                           #sdist源码包、bdist二进制包
+    命令执行后会自动在当前目录下生成一个dist目录，dist目录下存放着打包好的可安装的模块
+  第三步安装，安装在site-packages位置
+    在dist目录下执行命令
+    sudo python3 -m pip install vsearch-1.0.tar.gz
+  注意如果要更新这个模块只需重复上面三步，但是所更新的模块的setup.py中要指定一个新的版本号
+12.加入外部js文件<script src="js的路径"></script>
+  加入外部css文件<link href="css路径" rel="stylesheet"> rel表示关系relationship,<link>标签一般放在<head>
+  标签中，因为rel的某些属性不支持放在<body>标签中
+13.<form>标签主要用于收集数据，按钮标签也都放在<form>标签内
+14.jinja2.exceptions.TemplateSyntaxError: Expected an expression, got 'end of print statement'
+  此错误是由于html注释引起的
+  在jinja2中
+  {#  #} 表示注释，其中内容不被模板引擎转义。
+  {% %}语句
+  {{....}}打印模板的输出表达式
+15.print()函数它的默认行为是在屏幕上显示的任何内容后追加一个换行，当所要打印的内容中包含换行时，比如文件的内容时，
+   就会产生两个换行，使用print(要输出的内容,end='')就可以抑制print的换行;print(内容，end='|'),结尾就会以'|'结束
+16.request ，就是 Flask 中表示当前请求的对象，request 对象中保存了一次 http 请求的所有数据，并进行了封装处理，
+   我们就可以用这个 request 请求对象来获取请求信息。
+17.lsof -i:端口号，可以用来查看占用端口号的所有进程
+18. 文件.read()方法可以一次读取文件中所有内容，并把各行连接起来，就算各行有换行读取后就变成一行
+19.flask.escape(内容)可以将内容中与html产生歧义的字符进行等价转换，比如将'<'转换成&lt,'>'转换成&gt，
+   这样浏览器就能正常解析内容了
+20.使用screen命令进行程序保活
+21.当要使用多个print打印内容时，可以指定print的sep参数，用来指定每个内容用什么分隔
+   print('111',end='|')
+   print('222',end='|')
+   print('333',end='|')
+   以上三句等价于
+   print('111','222','333',sep='|')
+   在看一个很让人迷惑的例子：
+   stu = {
+    'name': '小王',
+    'age': 14,
+    'gender': '男',
+   }
+   for k,v in stu.items():
+      print(k,v,sep='->',end='<-')
+   print()
+   print(stu.items())
+   得到输出：
+   name->小王<-age->14<-gender->男<-
+   [('name', '小王'), ('age', 14), ('gender', '男')]
+22.将图片铺满背景的三种方法
+   <style>
+     body{
+      background:url('路径') no-reepeat center center;  /*加载背景图，背景图不平铺*/
+      background-size:cover; /*让背景图基于容器大小伸缩*/
+      background-attachment:fixed; /*当内容高度大于图片高度时，背景图象的位置相对于iewport固定，
+                                     此条必设置，否则可能无效*/
+      background-color:#CCCCCC /*设置背景颜色，背景图加载过程中会显示背景色*/
+     }
+   </style>
+
+23.输入以下命令验证数据库服务器是否正在运行：sudo systemctl status mariadb
+24.Mariadb安装好之后，默认 root 用户的本地登录密码为空，可以直接使用 root 用户在本地进行登录或者初始化,
+   可以使用 mysql -u root -p进行直接进入，但是ubuntu是不允许root登陆系统的，就比如我现在是dbin登陆的，
+   所以要在mysql -u root -p前加sudo改为root执行，才能用空密码登入系统
+25.在和数据库建立连接时用mariadb.connect(**dbconfig)，其中的**记法告诉connect函数用一个变量提供了一个参数字典，
+   如果看到**，那么connect函数就会把字典里的参数展开为单独的参数
+26.使用三重引号字符串可以暂时不启用python解释器的行末即语句结束的规则，而sql查询通常有多行，故用三重引号字符串进行查询
+27.数据库名vseaarchlogDB,密码vsearchpasswd,拥有着vseaarch其中有表log，
+   关闭数据库：service mariadb stop
+   启动数据库：service mariadb start
+   重启数据库：service mariadb restart
+   登入数据库：mysql -u vsearch -p vsearchlogDB;
+   删除数据库vsearchlogDB中的表log中的数据：delete from log where id>2;
+   切换到database2数据库：use 数据库名字;
+   查看有哪些数据库：show databases;
+   查看数据库中的表：show tables;
+   查看表中数据：select * from 表的名字;这个查询会包含所有信息，包括id和日期
+   看看表中部分数据，比如不想看到id和日期：select phrase,letters,ip,browser_string,results from log;
+   清空表数据，切下次记录，仍从id=1开始记录:truncate table 表名;
+   自定义下条数据id从几开始：ALTER TABLE 表名 AUTO_INCREMENT=几;
+   表中已经出现不连贯的数据ID时，执行以下语句进行修改:自增字段名就是你想重置哪一列，就把表里那一列的列名写上
+               SET @auto_id = 0;
+               UPDATE 表名 SET 自增字段名 = (@auto_id := @auto_id + 1);
+               ALTER TABLE 表名 AUTO_INCREMENT = 1;
+   查看表的结构：describe 表名；
+28.从 werkzeug 2.0 开始， request.user_agent的解析数据已被弃用；如果您想继续获取详细信息，
+   则需要使用自定义UserAgent实现并将其设置为自定义Request子类上的user_agent_class ，
+   该子类在Flask实例（或子类）上设置为request_class 。要想使用其解析数据可以使用ua_parser库来单独解析。
+29.创建类的时候，类里面必须要包含语句才语法正确，当不知道要写什么具体语句时可以用空语句pass。
+   用创建一个新对象时提供给类的所有参数都会传递到__init__方法。
+   类中的每一个方法都至少有一个参数，这个参数用来接收用类所创建的对象，并且约定俗成第一个参数写为self。
+   在编写类中的代码时可以把self当成所创建对象的一个别名。在对象上调用一个方法时，python会把调用对象作为第一个参数，
+   这个对象总是赋给各个方法的self参数。
+   类的继承：当创建类的时候，如果只有类名，那么它就谁都没有继承，如果类名后面有括号，括号里有参数(其实这个参数也是一个类)，
+   那么它就继承了括号里面的类。
+   创建一个类，Person后面什么都没有，它什么都没有继承
+   class Person:
+      def __init__(self, fname, lname):
+         self.firstname = fname
+         self.lastname = lname
+
+      def printname(self):
+         print(self.firstname, self.lastname)
+   在创建一个类，这个类后面有括号，且括号里有Person这个类，那么Student类就继承了Person类
+   class Student(Person):
+      #如果子类直接添加__init__()函数，那么子类将不再继承父的 __init__() 函数。
+      def __init__(self, fname, lname):
+          pass
+      #这样添加__init__()函数，即添加对父的 __init__() 函数的调用，就保持父的 __init__() 函数的继承。
+      def __init__(self, fname, lname):
+         Person.__init__(self, fname, lname)
+      #Python 还有一个 super() 函数，它会使子类从其父继承所有方法和属性，直截了当。
+      def __init__(self, fname, lname):
+         super().__init__(fname, lname)
+30.类和函数从形式上看是没有什么区别的，如何区分类和函数？约定俗成：函数用小写字母并且单词间用下划线连接，而类单词间
+   直接相连，每个单词的首字母大写。比如函数count_from_by(),类CountFromBy()。
+   当创建类需要赋值时：a=类CountFromBy(100),这个时候a就是100了。
+   用类创建一个对象时，相当于每一个对象都有类中的方法的一个副本，对象之间互不影响，就比如：
+   a=CountFromBy()   #increase()是类CountFromBy()的一个方法
+   a.increase()
+   在执行a.increase()时代码实际转化为CountFromBy.increase(a)。
+31.在一个对象调用方法之后，方法使用的是对象的属性值，方法结束对象的属性值仍存在，但是方法里面的一些变量将消失。
+   这个self其实就是相当于一个指针指向了调用对象，本身存储的是对象的地址，因为对象作用域是全局的，在类的方法里面
+   也是可以访问到的。
+32.类数据属性属于类本身，可以通过类名进行访问/修改、也可以被类的所有实例访问/修改；
+   在类定义之后，可以通过类名动态添加类数据属性，新增的类属性也被类和所有实例共有；
+   实例数据属性只能通过实例访问；
+   在实例生成后，还可以动态添加实例数据属性，但是这些实例数据属性只属于该实例。
+33.面向对象编成中有“构造函数”。它是一个特殊的方法，它会定义第一次创建对象时会发生什么，这通常包括对象实例化和属性初始化。
+34.__init__是用来定义创建对象时初始化值的；__repr__是用来定义如何表示对象的，比如如果直接访问对象本身会得到输出：对象
+   a的类型和id值的十六进制表示，如果想在访问对象是得到他的属性值，就可以在__repr__中定义，如：
+     def __repr__(self) -> str:
+         return str(self.val)
+35.创建上下文管理器时需要
+   class 一个类的名字：
+      def __init__(self):    
+         pass
+      这个用来初始化数据，每一次调用这个管理器时都会首先自动调用这个init，在with执行之前提供一个完成配置的机会。
+      def __enter__(self):
+         pass
+      这个是用来建立连接的，这个必须定义，在with语句开始时执行
+      def __exit__(self):  
+         pass
+      这个是用来清理连接，然后收尾，这个必须定义，会保证在with代码组结束时执行
+36.cookie存储在浏览器中，session存储在服务器中
+37.当要增加的代码与源代码具体工作的内容有联系，则建议使用函数修饰符而不是编写一个函数再函数调用
+38.函数修饰符需要懂四个问题：
+   1.如何创建一个函数？
+   这个很简单直接def即可
+   2.如何把一个函数作为参数传递到另一个函数？
+   把函数名(不包括后面的括号)作为一个参数传递给函数，就是向函数传递一个函数对象，函数可以调用函数对象如：
+   def apply(func:object,value:object) ->object :
+      return func(value)
+   3.如何从函数返回另一个函数？
+   函数可以嵌套在函数中，也就是可以定义一个函数，然后在这个函数中在定义一个函数，如：
+   def outer():
+      def inner():
+         print('this is inner')
+      print('this is outer,invoking inner')
+      inner()
+   可得到输出：
+   this is outer,invoking inner
+   this is inner
+   这个技术常见的用法就是外围函数使用return语句返回嵌套函数作为它的返回值。返回的函数并不会被执行，除非主动调用如：
+   def outer():
+      def inner():
+         print('this is inner')
+      print('this is outer,invoking inner')
+      return inner
+   i=outer()   #此时i就相当于outer中创建的inner函数的别名
+   i()         #后面加个小括号调用i
+   this is inner
+   4.如何处理任意数量和类型的函数参数？
+   使用*接受一个任意的参数列表(0个或多个)，用法：*参数名，参数名通常使用args，理论上*args是一个元组，
+   它被传递到函数后会将里面的每一个参数拆成一一个独立的参数，比如：
+   def myfunc(*args):
+      for a in args:
+         print(a,end=' ')
+      if args:
+         print()
+   执行myfunc(10,20,30,40)
+   可得 10 20 30 40
+   也可直接对一个现成列表直接使用*，这样列表就不会被当成一个整体，而是将列表里的对象一个个拆开。
+   如value=[1,2,3,4]
+   myfunc(*value)
+   ***********************************************************************************************
+   使用**接受一个关键字参数集合，这个其实就是使用关键字参数进行赋值的一个集合，将关键字参数转化为一个键值对集合，
+   将字典也可转化为键值对集合。就像前面的字典方法items()，不懂sep和end的看前面记录
+   def myfunc2(**kwargs):
+      for k,v in kwargs.item():
+         print(k,v,sep='->',end=' ')
+      if kwargs:
+         print()
+   也可直接对一个现成字典直接使用**，就像项目里的**dbconfig。
+   dbconfig = { 'host': '127.0.0.1',
+               'user': 'myUserid',
+               'password': 'myPassword',
+               'database': 'myDB' }
+   conn=mariadb.connect(**dbconfig)
+   就相当于使用关键字参数赋值
+   conn=mariadb.connect('host'='127.0.0.1','user'='myUserid','password'='myPassword','database'='myDB')
+   **************************************************************************************
+   还可以将以上两种结合起来
+   def myfunc3(*args,**kwargs):
+      if args:
+         for a in args:
+            print(a,end=' ')
+         print()
+      if kwargs:
+         for k,v in kwargs.items():
+            print(k,v,sep='->',end=' ')
+         print()
+   就可以这样混合用：myfunc3(1,2,3,a=10,b=20,c=30)
+   总结创建修饰符的规则：
+   修饰符是一个函数、修饰符取被修饰函数为参数、修饰符返回一个新函数(返回的函数要调用被修饰的函数)、修饰符维护被修饰函数的签名，
+   签名也就是被修饰函数参数的个数和类型
+   *******************************************************************************************
+   创建修饰符模板:
+   from functools import wraps
+
+   def decorator_name(func):
+      @wraps
+      def wrapper(*args,**kwargs):
+         #write your code
+         #write your code
+         #write your code
+         return func(*args,**kwargs)
+      return wrapper
+39.函数修饰符可以这样理解,也可看示例二十
+def outer(func):
+    def inner(*args,**kwargs):
+        print('this is inner')
+        return func(*args,**kwargs)
+    print('this is outer,invoking inner')
+    return inner
+def func(a):
+    a=a+1
+    return a
+print(outer(func)(1))
+得
+this is outer,invoking inner
+this is inner
+2
+********************************************************************************************
+@outer
+def func(a):
+    a=a+1
+    return a
+print(func(1))
+得
+this is outer,invoking inner
+this is inner
+2
+可以看出以上二者等价
+40.SQL注入，跨站点脚本(xss)。前者允许攻击者非法利用你的后端，后者允许攻击者非法利用你的网站，是web主要两种攻击。
+41.使用try语句可以管理异常，定制异常，用try，except执行容易出错的代码,try捕获异常，except处理异常。可以try一次，
+   except多次，也就是一个try可以配合多个except。当except进行处理时，它原本的错误信息会被自己的代码替代，这样我们就
+   不能了解具体错误信息。
+   这时我们可以通过sys库中的exc_info方法进行了解错误信息，这个函数会返回包括三个值的元组，分别为
+   (异常类型,详细描述异常的值,回溯跟踪对象)，这三个会在写上下文管理器的时候__exit__的参数用到。
+   import sys
+   try:
+      1/0
+   except:
+      err=sys.exc_info()
+      print(err)
+   (<class 'ZeroDivisionError'>, ZeroDivisionError('division by zero'), <traceback object at 0x7fe26edcbb00>)
+42.当except后面不跟任何异常名时，就会捕获所有异常；使用exxcept exception:也是捕获所有异常，但是可以使用as进行扩展，
+   使用as后可以将捕获的异常赋值给变量，并创建更有信息含量的错误消息。
+   try 
+      with open('myfile.txt') as fh:
+         file_data=fh.read()
+      print(file_data)
+   except FileNotFoundError:
+      print('the file is missing')
+   except Exception as err:
+      print('some other error occurred:',str(err))
+43.定制自己的异常：
+   1.确定一个合适的名字 
+   2.将其定义为一个空类 
+   3.让他继承Python的内置Exception类
+   4.可以使用raise关键字产生这个异常
+   class ConntionError(Exception)
+      pass
+   执行raise ConntionError('cannot connect ... is it time to panic？')
+   可得到__main__.ConntionError: cannot connect ... is it time to panic？
+   这样就可以捕获自己自定义的异常了
+   try:
+      raise ConntionError('Whoops!')
+   except ConntionError as err:
+      print('get',str(err))
+44.
