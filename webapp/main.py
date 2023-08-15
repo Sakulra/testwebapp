@@ -1,9 +1,10 @@
 from flask import Flask,render_template,request,session
 from vsearch import search4letters
 # import mariadb
-from DBcm import UseDatabase,ConnErr,CredErr
+from DBcm import UseDatabase,ConnErr
 from ua_parser import user_agent_parser
 from checker import check_log_in
+from threading import Thread
 
 app=Flask(__name__)
 
@@ -26,7 +27,9 @@ def do_search() -> 'html':
     phrase=request.form['phrase']   
     results = str(search4letters(phrase, letters))
     try:
-        log_request(request,results)
+        # log_request(request,results)
+        l_r=Thread(target=log_request,args=(request,results))
+        l_r.start()
     except Exception as err:
         print('logging failed with this error:',str(err))
     return render_template('results.html',
@@ -96,7 +99,7 @@ def viewlog() -> 'html':
     except ConnErr as err:
         print('your database have wrong with',str(err))
     except Exception as err:
-        print('something went wrong.:',str(err)
+        print('something went wrong.:',str(err))
     
     # with UseDatabase(app.config['dbconfig'] ) as cursor: #返回一个游标，那我该如何获取我想要的数据并传输到前端呢？
     #     _sql="""select phrase,letters,ip,browser_string,results from log"""

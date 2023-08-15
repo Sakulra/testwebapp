@@ -16,6 +16,7 @@
     400～499，代表客户端错误消息，服务器从客户端接收到一个它不理解也无法处理的请求，通常为客户端的问题。
     500～599，代表服务器错误消息，服务器从客户端接收到一个请求，但是服务器尝试处理这个请求时失败了，为服务器的问题。
   10.避免主代码代码写死，或者固定必须得用什么数据库，即紧耦合，要尽量将这种与主代码分离开，后来有修改也方便
+  11.
 
 
   
@@ -396,4 +397,54 @@ this is inner
       raise ConntionError('Whoops!')
    except ConntionError as err:
       print('get',str(err))
-44.
+44.多线程可用threading库并导入Thread类。要使用多线程首先要创建一个Thread对象，并将target参数赋值为线程要执行的函数名，
+   并为名为args参数提供其他参数(作为为一个元组)，最后把对象赋给一个变量。
+   例如，想要执行一个execute_slowly函数，它有三个参数glacial,plodding,leaden,正常执行为：
+   execute_slowly(glacial,plodding,leaden)
+   用线程为：
+   t=Thread(target=execute_slowly,args=(glacial,plodding,leaden))
+   t.start()
+   使用了线程之后无论这个函数花费多长时间都立即执行主函数下一个语句，而这个线程会由threading模块单独执行。
+45.flask执行完一个函数后，它的内存就会被回收。如果在函数执行过程中使用了线程，这个线程还接收来自函数的参数，那么flask就可能
+  会报错，比如如果线程需要长时间执行，但是如果函数很快就执行完了，当线程向函数访问要接收的参数时就会出现参数已经被回收了。
+  此时可以使用修饰符@copy_current_request_context来解决这个问题，这个修饰符可以确保在线程执行时将原http请求保活，也就是
+  包含线程的那个函数不消失。
+  但是要想使用这个函数修饰符，就必须把线程要调用的函数定义为一个内层函数。如：
+@app.route('/search4' ,methods=['POST'])
+def do_search() -> 'html':
+    letters=request.form['letters'] 
+    phrase=request.form['phrase']   
+    results = str(search4letters(phrase, letters))
+    try:
+    #就比如在这里使用了线程，并且调用了log_request这个外部函数，那么就可能在线程结束前do_search函数结束。
+        l_r=Thread(target=log_request,args=(request,results))
+        l_r.start()
+    except Exception as err:
+        print('logging failed with this error:',str(err))
+    return render_template('results.html',the_phrase=phrase,the_letters=letters,the_results=results,)
+def log_request(req:'flask_request',res:str) -> None:
+    with UseDatabase(app.config['dbconfig'] ) as cursor:
+        _sql = """insert into log (phrase,letters,ip,browser_string,results) 
+            values (%s,%s,%s,%s,%s)"""
+        user_agent_browser=user_agent_parser.ParseUserAgent(req.user_agent.string)['family']
+        cursor.execute(_sql,(req.form['phrase'],req.form['letters'],req.remote_addr,user_agent_browser,res))
+改为：
+@app.route('/search4' ,methods=['POST'])
+def do_search() -> 'html':
+   #在这里将被线程调用的函数定义为内函数
+   @copy_current_request_context
+   def log_request(req:'flask_request',res:str) -> None:
+      with UseDatabase(app.config['dbconfig'] ) as cursor:
+         _sql = """insert into log (phrase,letters,ip,browser_string,results) 
+            values (%s,%s,%s,%s,%s)"""
+         user_agent_browser=user_agent_parser.ParseUserAgent(req.user_agent.string)['family']
+         cursor.execute(_sql,(req.form['phrase'],req.form['letters'],req.remote_addr,user_agent_browser,res))
+    letters=request.form['letters'] 
+    phrase=request.form['phrase']   
+    results = str(search4letters(phrase, letters))
+    try:
+        l_r=Thread(target=log_request,args=(request,results))
+        l_r.start()
+    except Exception as err:
+        print('logging failed with this error:',str(err))
+    return render_template('results.html',the_phrase=phrase,the_letters=letters,the_results=results,)
