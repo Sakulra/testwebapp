@@ -335,29 +335,59 @@
 #     print(err)
 
 ##########################连接数据库error####################################
-import mariadb
+# import mariadb
 
-class ConnErr(Exception):
-    pass
-dbconfig = {'host':'127.0.0.1',
-            'user':'vsearch',
-            'password':'vsearchpasswd',
-            'database':'vsearchlogDB'}
-try:
-    conn = mariadb.connect(**dbconfig)
+# class ConnErr(Exception):
+#     pass
+# dbconfig = {'host':'127.0.0.1',
+#             'user':'vsearch',
+#             'password':'vsearchpasswd',
+#             'database':'vsearchlogDB'}
+# try:
+#     conn = mariadb.connect(**dbconfig)
 
-    cursor = conn.cursor()
-# _sql = """describe log"""
-    _sql = """insert into log (phrase,letters,ip,browser_string,results)
-       values (%s,%s,%s,%s,%s)"""
-    cursor.execute(_sql,('hitch-hiker','xyz','127.0.0.1','safari','set()'))
-    conn.commit()
-    _sql="""select * from log"""
-    cursor.execute(_sql)
-    for row in cursor.fetchall():
-        print(row)
-    cursor.close
-    conn.close
-except mariadb.OperationalError as err:
-    print('???',str(err))
-    # raise ConnErr(err)
+#     cursor = conn.cursor()
+# # _sql = """describe log"""
+#     _sql = """insert into log (phrase,letters,ip,browser_string,results)
+#        values (%s,%s,%s,%s,%s)"""
+#     cursor.execute(_sql,('hitch-hiker','xyz','127.0.0.1','safari','set()'))
+#     conn.commit()
+#     _sql="""select * from log"""
+#     cursor.execute(_sql)
+#     for row in cursor.fetchall():
+#         print(row)
+#     cursor.close
+#     conn.close
+# except mariadb.OperationalError as err:
+#     print('???',str(err))
+#     # raise ConnErr(err)
+
+############################################示例二十二####################################################
+# import pprint
+# with open('buzzers.csv') as data:
+#     ignore=data.readline()
+#     flight={}
+#     for line in data:
+#         k,v=line.strip().split(',')
+#         flight[k]=v
+# pprint.pprint(flight)
+
+############################################示例二十三###################################################
+import pprint
+from datetime import datetime
+
+def convert2ampm(time24: str):
+    return datetime.strptime(time24,'%H:%M').strftime('%I:%M%p')
+
+with open('buzzers.csv') as data:
+    ignore=data.readline()
+    flight={}
+    for line in data:
+        k,v=line.strip().split(',')
+        flight[k]=v
+pprint.pprint(flight)
+
+flight2={}
+for k,v in flight.items():
+    flight2[convert2ampm(k)]=v.title()
+pprint.pprint(flight2)
