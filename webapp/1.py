@@ -373,21 +373,92 @@
 # pprint.pprint(flight)
 
 ############################################示例二十三###################################################
-import pprint
-from datetime import datetime
+# import pprint
+# from datetime import datetime
 
-def convert2ampm(time24: str):
-    return datetime.strptime(time24,'%H:%M').strftime('%I:%M%p')
+# def convert2ampm(time24: str):
+#     return datetime.strptime(time24,'%H:%M').strftime('%I:%M%p')
 
-with open('buzzers.csv') as data:
-    ignore=data.readline()
-    flight={}
-    for line in data:
-        k,v=line.strip().split(',')
-        flight[k]=v
-pprint.pprint(flight)
+# with open('buzzers.csv') as data:
+#     ignore=data.readline()
+#     flight={}
+#     for line in data:
+#         k,v=line.strip().split(',')
+#         flight[k]=v
+# pprint.pprint(flight)
 
-flight2={}
-for k,v in flight.items():
-    flight2[convert2ampm(k)]=v.title()
-pprint.pprint(flight2)
+# flight2={}
+# for k,v in flight.items():
+#     flight2[convert2ampm(k)]=v.title()
+# pprint.pprint(flight2)
+#更改为推导式，和普通列表推导式形式稍有不同，这个是两个值
+# more_flight={convert2ampm(k):v.title() for k,v in flight.items()}
+# pprint.pprint(more_flight)
+
+###############################################示例二十四##############################################
+# data=[1,2,3,4,5,6,7,8]
+# evens=[]
+# for num in data:
+#     if not num % 2:
+#         evens.append(num)
+# print(evens)
+
+# evens2=[num for num in data if not num % 2]
+# print(evens2)
+
+# data=[1,'one',2,'two',3,'three',4,'four']
+# words=[]
+# for num in data:
+#     if isinstance(num,str):
+#         words.append(num)
+# print(words)
+
+# words2=[num for num in data if isinstance(num,str)]
+# #'isinstance'BIF会查看一个类型的对象
+# print(words2)
+
+#####################################示例二十五###################################################
+# import pprint
+# from datetime import datetime
+
+# def convert2ampm(time24: str):
+#     return datetime.strptime(time24,'%H:%M').strftime('%I:%M%p')
+
+# with open('buzzers.csv') as data:
+#     ignore=data.readline()
+#     flight={}
+#     for line in data:
+#         k,v=line.strip().split(',')
+#         flight[k]=v
+# pprint.pprint(flight)
+
+# # flight2={}
+# # for k,v in flight.items():
+# #     flight2[convert2ampm(k)]=v.title()
+# # pprint.pprint(flight2)
+# more_flight={convert2ampm(k):v.title() for k,v in flight.items()}
+# pprint.pprint(more_flight)
+
+# # ds=[]
+# # for k,v in more_flight.items():
+# #     if v=='west':
+# #         ds.append(k)
+# # ds=[k for k,v in more_flight.items() if v=='west']
+
+# # when={}
+# # for dest in set(more_flight.values()):
+# #     when[dest]=[k for k,v in more_fligh.items() if v==dest]
+
+# when={dest:[k for k,v in more_flight.items() if v==dest] for dest in set(more_flight.values())}
+# pprint.pprint(when)
+
+##################################示例二十六######################################################
+import requests
+
+urls=['https://bing.com','https://baidu.com','https://xiaomi.com']
+
+# for resp in [requests.get(url) for url in urls]:
+#     print(len(resp.content),'->',resp.status_code,'->',resp.url)
+
+for resp in (requests.get(url) for url in urls):
+    print(len(resp.content),'->',resp.status_code,'->',resp.url)

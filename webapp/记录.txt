@@ -28,6 +28,9 @@
     school = "freeCodeCamp"
     print(f"I'm learning {language} from {school}.")
     I'm learning Python from freeCodeCamp.
+   12.isinstance(对象，类型)，这个BIF会查看一个变量是否指示某个特定类型的对象
+   13.当想返回数据但不想使用return时(因为只要使用return那么这行语句就会结束)，使用yield，但主要应用于生成器，
+     使用yield后函数就变成生成器函数了。
 
 
   
@@ -489,4 +492,63 @@ stage4 4 192
    csv.read()将csv文件的一行作为一个字典返回
    csv.DictReader()将文件每一行都转换为字典后，再全体返回，相当于将csv.read()执行n遍
 
-48.推导式：从一个新的空的字典(新的空的数据结构)开始，用for循环迭代处理一个已有的字典，为这个新字典生成数据
+48.原形式如下
+   destinations=[]
+   for dest in flight.values():
+      destinations.append(dest.title())
+   推导式：从一个新的空的字典开始，用for循环迭代处理一个已有的字典，在这个过程中为这个新字典生成数据，推导式有三种
+   列表推导式，字典推导式，集合推导式。
+   推导式创建过程：
+   1.从一个新的空列表开始
+     empty_list=[]
+   2.使用for记法指定如何迭代处理现有数据，并把这个代码放在新的列表的中括号中，注意这个for语句末尾没有':'
+     empty_list=[for dest in flight.values()]
+   3.最后需要指定对dest中数据应用的转换，并把这个转换放在for关键字前面，注意没有append()调用，因为推导式默认有了，
+     empty_list=[dest.title() for dest in flight.values()]
+   
+   字典推导式稍有不同：
+   flight2={}
+   for k,v in flight.items():
+      flight2[convert2ampm(k)]=v.title()
+     转为 --->
+   more_flight={convert2ampm(k):v.title() for k,v in flight.items()}
+
+   还可用过滤器拓展推导式，比如只想处理某一名字的数据时,只需要把if语句去掉：再添加到末尾即可
+   just_freeport={}
+   for k,v in flight.item():
+      if v=='FREEPORT':
+         just_freeport[convert2ampm(k)]=v.title()
+   转化为 --->
+   just_freeport={convert2ampm(k):v.title() for k,v in flight.items() if v=='FREEPORT'}
+   也可以换行写
+   just_freeport={convert2ampm(k):v.title() 
+                  for k,v in flight.items() 
+                  if v=='FREEPORT'}
+   
+   推导式包含推导式也可，但是很不好理解
+   推导式与原型for循环的区别：推导式可任意放在代码中几乎任何地方，而for循环做不到，for循环指能作为语句出现在代码中，
+   也就是说不能作为表达式的一部分。
+   推导式有列表推导式，字典推导式，集合推导式，但是没有元组推导式，看起来像元组推导式的其实是生成器，使用列表推导式的
+   地方都可以使用生成器，会得到一样的结果。也就是把'[]'换成'()'，但是二者执行方式不同，如果用列表推导式的话，
+   需要等推导式生成所有结果之后其他代码才能执行，需要考虑时间以及内存占用；而生成器一次只生成一个数据然后就会被执行，
+   接着再生成数据，只占用一个数据项的内存。生成器还有一个有意思的用法，可以嵌套在函数中，当希望把生成器包装再你写的
+   一个小模块中可以让别人使用，而不需要他们知道或理解生成器时如下：
+   要封装的生成器
+   import requests
+   urls=['https://bing.com','https://baidu.com','https://xiaomi.com']
+   for resp in (requests.get(url) for url in urls):
+       print(len(resp.content),'->',resp.status_code,'->',resp.url)
+   封装后
+   urls=['https://bing.com','https://baidu.com','https://xiaomi.com']
+   for resp_len,status,url in gen_from_urls(urls):
+       print(resp_len,status,url)
+   定义在自己的模块中
+   import requests
+   def gen_from_urls(urls:tuple) -> tuple:
+       for resp in (requests.get(url) for url in urls):
+          #不使用return resp_len,status,url
+          yield len(resp.content),resp.status_code,resp.url
+   这个过程是主函数进行循环当要调用gen_from_urls()时转到调用函数执行，执行第一次后将结果返回主函数，自己挂起，
+   主函数进行下一次循环，再次调用gen_from_urls()，然后被调用函数被唤醒接着进行第二次循环，将结果返回主函数，
+   主函数进行下一次循环......就像主函数for循环和被调用函数for循环轮流执行一样。
+49.
