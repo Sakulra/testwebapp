@@ -505,6 +505,14 @@ stage4 4 192
      empty_list=[for dest in flight.values()]
    3.最后需要指定对dest中数据应用的转换，并把这个转换放在for关键字前面，注意没有append()调用，因为推导式默认有了，
      empty_list=[dest.title() for dest in flight.values()]
+
+   其实还可以从一个非空列表开始：
+   not_empty_list = [1.0,2.0,3.0]
+   b = [1,2,3]
+   not_empty_list = [i+j for i,j in zip(not_empty_list,b)]
+   print(not_empty_list)
+   可得到输出[2,4,6]
+   实际上是不是从空列表开始无所谓，只要使用列表推导式后，都会从头开始写入，就算原来非空也会被覆盖。
    
    字典推导式稍有不同：
    flight2={}
