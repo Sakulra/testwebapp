@@ -38,7 +38,7 @@
    a=1
    b=a #此时a,b都指向1这个对象
    a=a+1
-   可得到输出a=1,b=2
+   可得到输出a=2,b=1
    所以，a = a + 1，并不是让 a 的值增加 1，而是表示重新创建了一个新的值为 2 的对象，并让 a 指向它。
    但是 b 仍然不变，仍然指向 1 这个对象。
    当数据类型是可变的，例如列表，它的情况就不一样了
@@ -143,8 +143,13 @@ datetime.strptime("2022-06-02", "%Y-%m-%d")
                            #sdist源码包、bdist二进制包
     命令执行后会自动在当前目录下生成一个dist目录，dist目录下存放着打包好的可安装的模块
   第三步安装，安装在site-packages位置
-    在dist目录下执行命令
-    sudo python3 -m pip install vsearch-1.0.tar.gz
+    在dist目录下执行命令(linux下加sudo)
+    python -m pip install vsearch-1.0.tar.gz
+    python -m pip 的目的是如果有多个环境确保使用的 pip 与 Python 版本一致。
+    python -m参数的作用：
+        1.直接执行代码块：可以直接在命令行中执行一个Python模块
+        2.模块自测：当一个模块被设计为既可以作为库使用，又可以作为独立脚本运行时，可以将自测试代码放在__main__函数中，并使用python -m来运行该模块以进行测试
+        3.使用python -m可以确保在运行指定模块时，使用的是正确版本的Python解释器和所需的依赖项。对于多个Python环境并存的情况下特别有用，例如在虚拟环境中运行模块。
   注意如果要更新这个模块只需重复上面三步，但是所更新的模块的setup.py中要指定一个新的版本号
 12.加入外部js文件<script src="js的路径"></script>
   加入外部css文件<link href="css路径" rel="stylesheet"> rel表示关系relationship,<link>标签一般放在<head>
@@ -164,7 +169,7 @@ datetime.strptime("2022-06-02", "%Y-%m-%d")
 18. 文件.read()方法可以一次读取文件中所有内容，并把各行连接起来，就算各行有换行读取后就变成一行
 19.flask.escape(内容)可以将内容中与html产生歧义的字符进行等价转换，比如将'<'转换成&lt,'>'转换成&gt，
    这样浏览器就能正常解析内容了
-20.使用screen命令进行程序保活
+20.使用screen命令进行程序保活，linux下可以使用程序tmux来保持终端不会关闭。
 21.当要使用多个print打印内容时，可以指定print的sep参数，用来指定每个内容用什么分隔
    print('111',end='|')
    print('222',end='|')
@@ -289,13 +294,13 @@ datetime.strptime("2022-06-02", "%Y-%m-%d")
    def apply(func:object,value:object) ->object :
       return func(value)
    3.如何从函数返回另一个函数？
-   函数可以嵌套在函数中，也就是可以定义一个函数，然后在这个函数中在定义一个函数，如：
+   函数可以嵌套在函数中，也就是可以定义一个函数，然后在这个函数中再定义一个函数，如：
    def outer():
       def inner():
          print('this is inner')
       print('this is outer,invoking inner')
-      inner()
-   可得到输出：
+      inner()#从outer调用inner函数
+   可得到输出，注意输出顺序后调用的inner()：
    this is outer,invoking inner
    this is inner
    这个技术常见的用法就是外围函数使用return语句返回嵌套函数作为它的返回值。返回的函数并不会被执行，除非主动调用如：
